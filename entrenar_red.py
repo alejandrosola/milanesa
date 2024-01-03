@@ -5,10 +5,9 @@ import sys
 import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
+import constants
 
 EPOCHS = 5
-IMG_WIDTH = 50
-IMG_HEIGHT = 50
 NUM_CATEGORIES = 25
 TEST_SIZE = 0.4
 
@@ -19,7 +18,7 @@ def main():
         sys.exit("Usage: python entrenar.py data_directory [model.h5]")
 
     # Get image arrays and labels for all image files
-    images, labels = load_data(sys.argv[1])
+    images, labels = load_data(os.path.join(sys.argv[1], str(constants.IMG_WIDTH)))
 
     # Split data into training and testing sets
     labels = tf.keras.utils.to_categorical(labels)
@@ -39,7 +38,7 @@ def main():
 
     # Save model to file
     if len(sys.argv) == 3:
-        filename = 'models' + os.sep + sys.argv[2]
+        filename = os.path.join('models', sys.argv[2]) 
         model.save(filename)
         print(f"Model saved to {filename}.")
 
@@ -50,7 +49,7 @@ def load_data(data_dir):
         for file in os.listdir(os.path.join(data_dir, str(i))):
             image = cv2.imread(os.path.join(data_dir, str(i), file))
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+            image = cv2.resize(image, (constants.IMG_WIDTH, constants.IMG_HEIGHT))
             images.append(image)
             labels.append(i)
     return images, labels
@@ -63,7 +62,7 @@ def get_model():
     """
     model = tf.keras.models.Sequential()
 
-    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 1)))
+    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(constants.IMG_WIDTH, constants.IMG_HEIGHT, 1)))
     model.add(tf.keras.layers.Dropout(rate=0.2))
     model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
     model.add(tf.keras.layers.Flatten())

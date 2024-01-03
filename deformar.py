@@ -3,9 +3,9 @@ import numpy as np
 import sys
 import os
 import random
+import constants
 
 NUM_CATEGORIES = 25
-IMG_WIDTH, IMG_HEIGHT = 50, 50
 
 if (len(sys.argv) != 2 and len(sys.argv) != 4):
     sys.exit("Usage: python deformar.py [images_path] [save_path] [iterations]")
@@ -17,7 +17,7 @@ k = 0
 for file in os.listdir(data_dir):
     # Cargar la imagen en blanco y negro
     img = cv2.imread(os.path.join(data_dir, file), 0)
-    img = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT))
+    img = cv2.resize(img, (constants.IMG_WIDTH, constants.IMG_HEIGHT))
 
     # Definir los puntos de referencia para la transformación
     alto, ancho = img.shape
@@ -26,8 +26,8 @@ for file in os.listdir(data_dir):
     for i in range(cant_imagenes):
         imagen_deformada = img.copy()
         for j in range(random.randint(1, 2)):
-            base = int(IMG_WIDTH / 6)
-            max = int(IMG_WIDTH / 3)
+            base = int(constants.IMG_WIDTH / 6)
+            max = int(constants.IMG_WIDTH / 3)
             inicio_x, inicio_y = random.randint(0, ancho - base), random.randint(0, alto - base)
             fin_x, fin_y = random.randint(inicio_x + base, inicio_x + base + max), random.randint(inicio_y + base, inicio_y + base + max)
             mascara[inicio_y:fin_y, inicio_x:fin_x] = 255
