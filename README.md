@@ -1,4 +1,4 @@
-### Milanesas como provincias argentinas
+# Milanesas como provincias argentinas
 
 En ese mini proyecto estoy intentando crear y entrenar una **convolutional neural network** que reciba una imágen del usuario y devuelva a qué provincia argentina se le parece más.
 
