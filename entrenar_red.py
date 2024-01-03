@@ -39,7 +39,7 @@ def main():
 
     # Save model to file
     if len(sys.argv) == 3:
-        filename = sys.argv[2]
+        filename = 'models' + os.sep + sys.argv[2]
         model.save(filename)
         print(f"Model saved to {filename}.")
 
@@ -64,6 +64,7 @@ def get_model():
     model = tf.keras.models.Sequential()
 
     model.add(tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 1)))
+    model.add(tf.keras.layers.Dropout(rate=0.2))
     model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
     model.add(tf.keras.layers.Flatten())
     model.add(tf.keras.layers.Dense(128, activation="relu"))
