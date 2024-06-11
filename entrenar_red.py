@@ -11,6 +11,7 @@ EPOCHS = 5
 NUM_CATEGORIES = 25
 TEST_SIZE = 0.4
 
+
 def main():
 
     # Check command-line arguments
@@ -20,6 +21,7 @@ def main():
     # Get image arrays and labels for all image files
     images, labels = load_data(os.path.join(sys.argv[1], str(constants.IMG_WIDTH)))
 
+    print(os.path.join(sys.argv[1], str(constants.IMG_WIDTH)))
     # Split data into training and testing sets
     labels = tf.keras.utils.to_categorical(labels)
 
@@ -34,13 +36,14 @@ def main():
     model.fit(x_train, y_train, epochs=EPOCHS)
 
     # Evaluate neural network performance
-    model.evaluate(x_test,  y_test, verbose=2)
+    model.evaluate(x_test, y_test, verbose=2)
 
     # Save model to file
     if len(sys.argv) == 3:
-        filename = os.path.join('models', sys.argv[2]) 
+        filename = os.path.join("models", sys.argv[2])
         model.save(filename)
         print(f"Model saved to {filename}.")
+
 
 def load_data(data_dir):
     images = []
@@ -54,15 +57,18 @@ def load_data(data_dir):
             labels.append(i)
     return images, labels
 
+
 def get_model():
-    """
-    Returns a compiled convolutional neural network model. Assume that the
-    `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
-    The output layer should have `` units, one for each category.
-    """
     model = tf.keras.models.Sequential()
 
-    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(constants.IMG_WIDTH, constants.IMG_HEIGHT, 1)))
+    model.add(
+        tf.keras.layers.Conv2D(
+            32,
+            (3, 3),
+            activation="relu",
+            input_shape=(constants.IMG_WIDTH, constants.IMG_HEIGHT, 1),
+        )
+    )
     model.add(tf.keras.layers.Dropout(rate=0.2))
     model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
     model.add(tf.keras.layers.Flatten())
@@ -70,9 +76,7 @@ def get_model():
     model.add(tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax"))
 
     model.compile(
-        optimizer="adam",
-        loss="categorical_crossentropy",
-        metrics=["accuracy"]
+        optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
     )
 
     return model
