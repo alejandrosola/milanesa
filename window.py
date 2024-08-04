@@ -13,7 +13,7 @@ class Window:
         self.create_img_window()
         self.root.geometry("300x200")
 
-        self.file = "/home/alejandro/milanesa/resources/milanesas/dibujo0.png"
+        self.file = "/home/alejandro/milanesa/resources/mila6.jpeg"
         self.model = "/home/alejandro/milanesa/models/modelo_rotadas.h5"
 
         self.root.config(background=background)

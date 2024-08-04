@@ -24,21 +24,38 @@ def open_file(window, variable):
 def query_ai(window, file, model):
     model = tf.keras.models.load_model(model)
     image = cv2.imread(file, 0)
-    ret, image = cv2.threshold(image, 120, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    ret, image = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     image = cv2.resize(image, (constants.IMG_WIDTH, constants.IMG_HEIGHT))
 
     kernel = np.ones((3, 3), np.uint8)
-    # Hacer erode o dilate (random)
 
-    image = cv2.erode(image, kernel, iterations=1)
+    # Erode y dilate para eliminar pixeles blancos en el medio de la mila
+    image = cv2.erode(image, kernel, iterations=8)
 
-    image = cv2.dilate(image, kernel, iterations=1)
+    image = cv2.dilate(image, kernel, iterations=8)
 
+    new_width, new_height = int(constants.IMG_WIDTH * 0.8), int(
+        constants.IMG_HEIGHT * 0.8
+    )
+    original_height, original_width = constants.IMG_WIDTH, constants.IMG_HEIGHT
+
+    resized_image = cv2.resize(image, (new_width, new_height))
+    image = np.full((original_height, original_width), 255, dtype=np.uint8)
+
+    x_offset = (original_width - new_width) // 2
+    y_offset = (original_height - new_height) // 2
+
+    # Inserta la imagen redimensionada en el centro de la nueva imagen
+    image[y_offset : y_offset + new_height, x_offset : x_offset + new_width] = (
+        resized_image
+    )
     classifications = None
 
     classifications = model.predict(
         np.array(image).reshape(1, constants.IMG_WIDTH, constants.IMG_HEIGHT, 1)
     )
+
+    cv2.imwrite("./test.jpg", image)
 
     window.create_img_window()
     window.img_window.deiconify()
